@@ -20,9 +20,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/chat', (req, res) => {
-  // ఒకవేళ templates/index.html సరిగ్గా రీచ్ కాకపోతే ఇక్కడ నేరుగా టెస్ట్ చేయవచ్చు
-  try {
-    res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+  res.sendFile(path.join(__dirname, '../templates', 'index.html'));
+});
+
   } catch (err) {
     res.send('Index file path error: ' + err.message);
   }
