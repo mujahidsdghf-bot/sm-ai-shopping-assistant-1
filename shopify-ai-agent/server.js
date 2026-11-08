@@ -1,12 +1,18 @@
 require('dotenv').config();
+const express = require('express');
 const path = require('path');
 const { handleAIQuery } = require('./aiAgent');
 
 const app = express();
 app.use(express.json());
 
-// హోమ్ రూట్ - చాట్ UI చూపించడానికి
+// హోమ్ రూట్ టెస్టింగ్ కోసం
 app.get('/', (req, res) => {
+  res.send('SM AI Shopping Assistant Backend is Running Live!');
+});
+
+// చాట్ UI ఓపెన్ కావడానికి /chat రూట్
+app.get('/chat', (req, res) => {
   res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
