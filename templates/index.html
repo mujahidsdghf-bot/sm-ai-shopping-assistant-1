@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM AI Shopping Assistant</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+        h2 { color: #202223; }
+        #chat-box { border: 1px solid #dfe3e8; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; border-radius: 4px; background: #fafbfb; }
+        .message { margin-bottom: 10px; }
+        .user-msg { color: #005bd3; font-weight: bold; }
+        .bot-msg { color: #108043; }
+        .input-group { display: flex; gap: 8px; }
+        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #c9cccf; border-radius: 4px; }
+        button { background-color: #008060; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #006e52; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🤖 SM AI Shopping Assistant</h2>
+    <div id="chat-box">
+        <div class="message bot-msg"><b>AI:</b> నమస్తే! నేను మీ AI షాపింగ్ అసిస్టెంట్‌ని. ఈరోజు మీకు ఎలా సహాయపడగలను?</div>
+    </div>
+    
+    <div class="input-group">
+        <input type="text" id="user-input" placeholder="మీ ప్రశ్నను ఇక్కడ టైప్ చేయండి...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const message = inputField.value.trim();
+        if (!message) return;
+
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<div class="message user-msg"><b>మీరు:</b> ${message}</div>`;
+        inputField.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await res.json();
+            
+            if (data.response) {
+                chatBox.innerHTML += `<div class="message bot-msg"><b>AI:</b> ${data.response}</div>`;
+            } else {
+                chatBox.innerHTML += `<div class="message bot-msg" style="color:red;"><b>Error:</b> ${data.error || 'ఏదో పొరపాటు జరిగింది'}</div>`;
+            }
+        } catch (err) {
+            chatBox.innerHTML += `<div class="message bot-msg" style="color:red;"><b>Error:</b> సర్వర్‌తో కనెక్ట్ అవ్వలేకపోయాం</div>`;
+        }
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
