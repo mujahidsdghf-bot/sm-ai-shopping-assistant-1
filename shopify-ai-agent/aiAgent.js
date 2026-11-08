@@ -1,8 +1,7 @@
-const OpenAI = require('openai');
+const { GoogleGenAI } = require('@google/genai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Google Gen AI క్లైంట్ ఇనిషియలైజ్ చేయడం (RENDER లో GEMINI_API_KEY సెట్ చేసి ఉండాలి)
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function handleAIQuery(userMessage, storeProducts) {
   try {
@@ -19,15 +18,15 @@ async function handleAIQuery(userMessage, storeProducts) {
     - Recommend specific products from the list if they match.
     `;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
+    // Gemini మోడల్ కాల్ చేయడం
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash', // లేదంటే gemini-2.5-pro వాడಬಹುದು
+      contents: prompt,
     });
 
-    return response.choices[0].message.content;
+    return response.text;
   } catch (error) {
-    console.error('OpenAI Error:', error);
+    console.error('Gemini AI Error:', error);
     return 'క్షమించండి, ప్రస్తుతం మా సర్వీస్‌లో సాంకేతిక సమస్య ఉంది. దయచేసి కొద్దిసేపు ఆగి ప్రయత్నించండి.';
   }
 }
