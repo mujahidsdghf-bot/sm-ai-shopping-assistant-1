@@ -1,13 +1,13 @@
 require('dotenv').config();
-const express = require('express');
+const path = require('path');
 const { handleAIQuery } = require('./aiAgent');
 
 const app = express();
 app.use(express.json());
 
-// హోమ్ రూట్ టెస్టింగ్ కోసం
+// హోమ్ రూట్ - చాట్ UI చూపించడానికి
 app.get('/', (req, res) => {
-  res.send('SM AI Shopping Assistant Backend is Running Live!');
+  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
 // షాపిఫై ఇన్‌స్టాలేషన్ లూప్ నివారించడానికి /auth రూట్
