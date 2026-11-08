@@ -1,0 +1,15 @@
+name = "SM AI Shopping Assistant"
+client_id = "a5318c699c2e264d019b07e78f5588a"
+application_url = "https://sm-ai-shopping-assistant-1.onrender.com"
+embedded = true
+
+[access_scopes]
+scopes = "read_products,write_products,read_orders,write_orders,read_customers"
+
+[auth]
+redirect_urls = [
+  "https://sm-ai-shopping-assistant-1.onrender.com/auth/callback"
+]
+
+[webhooks]
+api_version = "2026-10"
