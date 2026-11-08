@@ -6,7 +6,7 @@ const { handleAIQuery } = require('./aiAgent');
 const app = express();
 app.use(express.json());
 
-// హోమ్ రూట్ మరియు చాట్ రూట్ రెండింటిలోనూ ఒకేసారి UI లేదా మెసేజ్ వచ్చేలా
+// హోమ్ రూట్ టెస్టింగ్ కోసం
 app.get('/', (req, res) => {
   res.send(`
     <html>
@@ -19,16 +19,16 @@ app.get('/', (req, res) => {
   `);
 });
 
+// చాట్ రూట్ - ఇండెక్స్ ఫైల్ లోడ్ కావడానికి
 app.get('/chat', (req, res) => {
-  res.sendFile(path.join(__dirname, '../templates', 'index.html'));
-});
-
+  try {
+    res.sendFile(path.join(__dirname, '../templates', 'index.html'));
   } catch (err) {
     res.send('Index file path error: ' + err.message);
   }
 });
 
-// షాపిఫై ఇన్‌స్టాలేషన్ రూట్స్
+// షాపిఫై ఇన్‌స్టాలేషన్ లూప్ నివారించడానికి /auth రూట్
 app.get('/auth', (req, res) => {
   const shop = req.query.shop;
   if (shop) {
@@ -36,17 +36,22 @@ app.get('/auth', (req, res) => {
     const authUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=read_products,write_products,read_orders,write_orders,read_customers&redirect_uri=https://sm-ai-shopping-assistant-1.onrender.com/auth/callback`;
     return res.redirect(authUrl);
   }
-  return res.status(400).send('Missing shop parameter.');
+  return res.status(400).send('Missing shop parameter. Please install from Shopify Partner Dashboard.');
 });
 
+// ఇన్‌స్టాలేషన్ పూర్తయ్యాక రీడైరెక్ట్ అయ్యే కాల్‌బ్యాక్ రూట్
 app.get('/auth/callback', (req, res) => {
-  res.send('Shopify Auth Callback Successful!');
+  res.send('Shopify Auth Callback Successful! App is successfully connected to your store.');
 });
 
+// షాపిఫై స్టోర్ నుండి వచ్చే చాట్ / ప్రొడక్ట్ ప్రశ్నలను హ్యాండిల్ చేయడానికి ఎండ్ పాయింట్
 app.post('/api/chat', async (req, res) => {
   try {
     const { userMessage, storeProducts } = req.body;
+    
+    // AI ఏజెంట్ నుండి రెస్పాన్స్ పొందడం
     const aiResponse = await handleAIQuery(userMessage, storeProducts);
+    
     res.json({ success: true, reply: aiResponse });
   } catch (error) {
     console.error('Error handling AI query:', error);
