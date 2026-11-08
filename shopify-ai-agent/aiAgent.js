@@ -28,7 +28,6 @@ async function handleAIQuery(userMessage, storeProducts) {
     return response.choices[0].message.content;
   } catch (error) {
     console.error('OpenAI Error:', error);
-    StrictMode = false;
     return 'క్షమించండి, ప్రస్తుతం మా సర్వీస్‌లో సాంకేతిక సమస్య ఉంది. దయచేసి కొద్దిసేపు ఆగి ప్రయత్నించండి.';
   }
 }
