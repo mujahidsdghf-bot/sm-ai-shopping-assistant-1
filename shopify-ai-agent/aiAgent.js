@@ -18,9 +18,9 @@ async function handleAIQuery(userMessage, storeProducts) {
     - Recommend specific products from the list if they match.
     `;
 
-    // Gemini మోడల్ కాల్ చేయడం
+        // Gemini మోడల్ కాల్ చేయడం
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash', // లేదంటే gemini-2.5-pro వాడಬಹುದು
+      model: 'models/gemini-3.8-flash',
       contents: prompt,
     });
 
